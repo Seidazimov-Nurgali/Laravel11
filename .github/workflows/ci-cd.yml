@@ -44,7 +44,7 @@ jobs:
       # Тестирование
       - name: Run tests
         run: |
-          docker-compose exec app ./vendor/bin/phpunit
+          docker-compose exec Laravel11-php-fpm ./vendor/bin/phpunit
 
       - name: Docker down
         run: |
