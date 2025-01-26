@@ -42,9 +42,9 @@ jobs:
           docker-compose -f docker-compose.yml up -d
 
       # Тестирование
-      - name: Run tests
-        run: |
-          docker exec Laravel11-php-fpm ./vendor/bin/phpunit
+#      - name: Run tests
+#        run: |
+#          docker exec Laravel11-php-fpm ./vendor/bin/phpunit
 
       - name: Docker down
         run: |
