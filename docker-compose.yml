@@ -12,7 +12,7 @@ services:
 
     node:
         image: node
-        container_name: ${APP_NAME}-node
+        container_name: Laravel11-node
         tty: true
         volumes:
             - ./:/var/www
@@ -39,7 +39,7 @@ services:
 
     nginx:
         image: nginx:latest
-        container_name: ${APP_NAME}-nginx
+        container_name: Laravel11-nginx
         restart: unless-stopped
         tty: true
         volumes:
@@ -52,14 +52,14 @@ services:
 
     php:
         build: _docker/php-fpm
-        container_name: ${APP_NAME}-php-fpm
+        container_name: Laravel11-php-fpm
         restart: unless-stopped
         tty: true
         volumes:
             - ./:/var/www
             #- ./_docker/php-fpm/php.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini
         ports:
-            - ":9000"
+            - "9000:9000"
         networks:
             - internal
 
