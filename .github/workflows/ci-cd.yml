@@ -20,6 +20,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      # Установка Docker Compose
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       # Кеширование Docker слоев
       - name: Cache Docker layers
         uses: actions/cache@v2
@@ -40,24 +46,6 @@ jobs:
         run: |
           docker-compose exec app ./vendor/bin/phpunit
 
-      # Деплой на DigitalOcean
-      - name: Deploy to DigitalOcean
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DO_SSH_PRIVATE_KEY }}
-          DO_HOST: ${{ secrets.DO_HOST }}
+      - name: Docker down
         run: |
-          # Устанавливаем SSH ключ
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          # Устанавливаем строгую проверку хоста
-          ssh-keyscan -H $DO_HOST >> ~/.ssh/known_hosts
-
-          # Подключаемся и перезапускаем контейнеры на сервере
-          ssh -o StrictHostKeyChecking=no root@$DO_HOST << 'EOF'
-            cd /var/www/laravel11
-            git pull origin main
-            docker-compose -f /var/www/laravel11/docker-compose.yml down
-            docker-compose -f /var/www/laravel11/docker-compose.yml up -d --build
-          EOF
+          docker-compose down
