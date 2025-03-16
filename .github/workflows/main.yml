@@ -85,7 +85,7 @@ jobs:
           username: root
           key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
           passphrase: test
-#          script: |
+          script: |
 #            cd /var/www/Laravel11
 #            git pull
 #            docker exec Laravel11-php-fpm composer install --no-dev --optimize-autoloader
