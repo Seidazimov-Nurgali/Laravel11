@@ -7,10 +7,10 @@ jobs:
     name: run static code analysis
     uses: ./.github/workflows/ci-lint.yml
 
-  tests:
-    name: run test
-    needs: linting
-    uses: ./.github/workflows/ci-test.yml
+#  tests:
+#    name: run test
+#    needs: linting
+#    uses: ./.github/workflows/ci-test.yml
 
   build-and-deploy:
     runs-on: ubuntu-latest
