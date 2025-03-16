@@ -15,7 +15,7 @@ class SiteController extends Controller
 {
     public function index(Request $request)
     {
-        //Cache::flexible('best-sellers', [5, 10], function () {});
+        // Cache::flexible('best-sellers', [5, 10], function () {});
         $best_sellers = Cache::remember('best-sellers', 60 * 60 * 24, function () {
             return Product::query()
                 ->withTrashed()

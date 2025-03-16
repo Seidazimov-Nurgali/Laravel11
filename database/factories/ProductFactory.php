@@ -31,7 +31,7 @@ class ProductFactory extends Factory
             'quantity' => fake()->numberBetween(1, 100),
             'price' => $price,
             'price_id' => $case,
-            //'image_path' => fake()->imageUrl(),
+            // 'image_path' => fake()->imageUrl(),
             'category_id' => Category::get()->random()->id,
             'brand_id' => Brand::get()->random()->id,
             'is_public' => fake()->boolean(),

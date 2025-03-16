@@ -72,16 +72,16 @@ class ProductController extends Controller
             foreach ($request->images as $image) {
                 $uniqueName = time().'-'.Str::random(10).'.'.$image->getClientOriginalExtension();
                 $imagePath = Storage::disk('public')->putFileAs('/product_images', $image, $uniqueName);
-                //$image->move('product_images', $uniqueName);
+                // $image->move('product_images', $uniqueName);
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image_path' => $imagePath,
-                    //'url' => url('/storage/', $imagePath)
+                    // 'url' => url('/storage/', $imagePath)
                 ]);
             }
         }
 
-        //event(new ProductCreated($product));
+        // event(new ProductCreated($product));
 
         return redirect()->route('admin.products.index')->with('message', 'Product successfully created');
     }
@@ -101,8 +101,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //$this->authorize('update', $product);
-        //Gate::authorize('update', $product);
+        // $this->authorize('update', $product);
+        // Gate::authorize('update', $product);
         //        if ($request->user()->cannot('update', $product)) {
         //            abort(403);
         //        }
@@ -136,7 +136,7 @@ class ProductController extends Controller
         foreach ($request->images ?? [] as $image) {
             $uniqueName = time().'-'.Str::random(10).'.'.$image->getClientOriginalExtension();
             $imagePath = Storage::disk('public')->putFileAs('/product_images', $image, $uniqueName);
-            //$image->move('product_images', $uniqueName);
+            // $image->move('product_images', $uniqueName);
             ProductImage::create([
                 'product_id' => $product->id,
                 'image_path' => $imagePath,

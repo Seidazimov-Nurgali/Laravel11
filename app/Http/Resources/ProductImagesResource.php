@@ -17,7 +17,7 @@ class ProductImagesResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //'product_id' => $this->product_id,
+            // 'product_id' => $this->product_id,
             'image_path' => $this->image_path,
             'image_url' => url('storage', $this->image_path),
             'size' => Storage::disk('public')->size($this->image_path),

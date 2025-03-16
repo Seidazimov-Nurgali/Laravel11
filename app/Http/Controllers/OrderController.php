@@ -43,7 +43,7 @@ class OrderController extends Controller
                         'product_price' => $product->price,
                     ]);
 
-                    //$order->increment('total_price', $product->price * $cart->quantity);
+                    // $order->increment('total_price', $product->price * $cart->quantity);
 
                     $product->decrement('quantity', $cart->quantity);
                     $cart->delete();
