@@ -13,6 +13,7 @@ docker exec Laravel11-php-fpm php artisan key:generate
 docker exec Laravel11-php-fpm php artisan migrate:fresh --seed
 docker exec Laravel11-php-fpm php artisan optimize
 docker exec Laravel11-php-fpm /etc/init.d/supervisor start
+chmod -R 777 storage/logs
 docker exec Laravel11-node npm install
 docker exec Laravel11-node npm run build
 echo "Done!"
