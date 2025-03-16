@@ -53,8 +53,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t nurgaliseidazimov/Laravel11-app-image:v1.0.0 .
-          docker push nurgaliseidazimov/Laravel11-app-image:v1.0.0
+          docker build -t nurgaliseidazimov/laravel11-app-image:v1.0.0 .
+          docker push nurgaliseidazimov/laravel11-app-image:v1.0.0
 
 #      - name: Set up Docker Compose
 #        run: |
