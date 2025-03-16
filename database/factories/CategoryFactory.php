@@ -19,11 +19,11 @@ class CategoryFactory extends Factory
         $title = fake()->unique()->randomElement([
             'Computer',
             'Phone',
-            'Watch'
+            'Watch',
         ]);
 
         return [
-            'title' => $title
+            'title' => $title,
         ];
     }
 }

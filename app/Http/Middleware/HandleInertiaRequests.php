@@ -35,10 +35,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'flash' => [
-                'message' => session('message')
+                'message' => session('message'),
             ],
-            'carts_count' => $request->user() ? $request->user()->carts->count() : 0
-//            'canLogin' => app('router')->has('login'),
+            'carts_count' => $request->user() ? $request->user()->carts->count() : 0,
+            //            'canLogin' => app('router')->has('login'),
         ];
     }
 }

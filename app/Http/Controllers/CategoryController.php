@@ -22,7 +22,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         Category::create([
-            'title' => $request->title
+            'title' => $request->title,
         ]);
 
         return redirect()->route('admin.categories.index')->with('message', 'Category successfully created');

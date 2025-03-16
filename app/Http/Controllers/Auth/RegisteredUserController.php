@@ -46,7 +46,7 @@ class RegisteredUserController extends Controller
 
         RoleUser::create([
             'user_id' => $user->id,
-            'role_id' => Role::IS_USER
+            'role_id' => Role::IS_USER,
         ]);
 
         event(new Registered($user));

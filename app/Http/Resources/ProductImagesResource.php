@@ -21,7 +21,7 @@ class ProductImagesResource extends JsonResource
             'image_path' => $this->image_path,
             'image_url' => url('storage', $this->image_path),
             'size' => Storage::disk('public')->size($this->image_path),
-            'name' => str_replace('product_images/', '', $this->image_path)
+            'name' => str_replace('product_images/', '', $this->image_path),
         ];
     }
 }

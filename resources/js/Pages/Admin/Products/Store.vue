@@ -1,5 +1,5 @@
 <script setup>
-import {nextTick, onMounted, ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 import Modal from "@/Components/Modal.vue";
 import {useForm} from "@inertiajs/vue3";
 import {Dropzone} from "dropzone";

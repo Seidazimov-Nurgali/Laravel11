@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -30,25 +30,26 @@ class Product extends Model
         'created_by',
         'updated_by',
         'deleted_by',
-        'price_id'
+        'price_id',
     ];
 
-//    protected $dispatchesEvents = [
-//        'created' => ProductCreated::class
-//    ];
+    //    protected $dispatchesEvents = [
+    //        'created' => ProductCreated::class
+    //    ];
 
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:m:s'
+        'created_at' => 'datetime:Y-m-d H:m:s',
     ];
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d');
     }
 
-//    public function created_by(): BelongsTo
-//    {
-//        return $this->belongsTo(User::class, 'id', 'created_by');
-//    }
+    //    public function created_by(): BelongsTo
+    //    {
+    //        return $this->belongsTo(User::class, 'id', 'created_by');
+    //    }
 
     public function category(): BelongsTo
     {
@@ -70,10 +71,10 @@ class Product extends Model
         return $this->hasMany(CartItem::class);
     }
 
-//    public function price(): string
-//    {
-//        return number_format($this->price, 0, '', ' ');
-//    }
+    //    public function price(): string
+    //    {
+    //        return number_format($this->price, 0, '', ' ');
+    //    }
 
     public function scopePublic(Builder $query): void
     {
@@ -84,8 +85,8 @@ class Product extends Model
     {
         return [
             'slug' => [
-                'source' => 'title'
-            ]
+                'source' => 'title',
+            ],
         ];
     }
 
@@ -95,12 +96,20 @@ class Product extends Model
             $query->whereIn('brand_id', $brands);
         }
 
-        if(count($categories)){
+        if (count($categories)) {
             $query->whereIn('category_id', $categories);
         }
 
-        if(count($prices)){
+        if (count($prices)) {
             $query->whereIn('price_id', $prices);
+        }
+
+        if (request()->has('search')) {
+            $query->where('title', 'LIKE', '%'.request('search').'%');
+        }
+
+        if (request()->has('sortBy')) {
+            $query->orderBy(request('sortBy'), request('sortOrder') ?? 'ASC');
         }
     }
 }

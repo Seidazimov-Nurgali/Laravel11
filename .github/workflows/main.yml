@@ -1,0 +1,90 @@
+name: Main workflow
+
+on: [push]
+
+jobs:
+  linting:
+    name: run static code analysis
+    uses: ./.github/workflows/ci-lint.yml
+
+  tests:
+    name: run test
+    needs: linting
+    uses: ./.github/workflows/ci-test.yml
+
+  build and deploy:
+    runs-on: ubuntu-latest
+    needs: tests
+
+#    services:
+#      redis:
+#        image: redis:alpine
+#        ports:
+#          - 6379:6379
+#      postgres:
+#        image: postgres:latest
+#        env:
+#          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
+#          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+#          POSTGRES_DB: ${{ secrets.DB_DATABASE }}
+#        ports:
+#          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t nurgaliseidazimov/Laravel11-app-image:v1.0.0 .
+          docker push nurgaliseidazimov/Laravel11-app-image:v1.0.0
+
+#      - name: Set up Docker Compose
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y docker-compose
+#
+#      - name: Build and run Docker containers
+#        run: |
+#          docker-compose -f docker-compose.yml build
+#          docker-compose -f docker-compose.yml up -d
+#
+#      - name: Run tests
+#        run: |
+#          docker exec Laravel11-php-fpm ./vendor/bin/pest
+#
+#      - name: Build npm assets
+#        run: |
+#          docker exec Laravel11-node npm run build
+#
+#      - name: Docker down
+#        run: |
+#          docker-compose down
+
+#      - name: Deploy
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.DO_HOST }}
+#          username: root
+#          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+#          passphrase: my_rsa_keys
+#          script: |
+#            cd laravel11
+#            git pull

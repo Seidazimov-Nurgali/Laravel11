@@ -15,7 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        abort_if(!$request->user()->hasAdmin->count(), 403);
+        abort_if(! $request->user()->hasAdmin->count(), 403);
 
         return $next($request);
     }

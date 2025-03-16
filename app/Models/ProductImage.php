@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class ProductImage extends Model
 {
     protected $fillable = [
@@ -11,13 +12,13 @@ class ProductImage extends Model
         'product_id',
     ];
 
-    function product(): BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-//    public function image_url(): string
-//    {
-//        return url('/storage/', $this->image_path);
-//    }
+    //    public function image_url(): string
+    //    {
+    //        return url('/storage/', $this->image_path);
+    //    }
 }

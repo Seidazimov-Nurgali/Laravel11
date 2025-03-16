@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProductPolicy
 {
@@ -13,7 +12,7 @@ class ProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +52,7 @@ class ProductPolicy
      */
     public function restore(User $user, Product $product): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -61,6 +60,6 @@ class ProductPolicy
      */
     public function forceDelete(User $user, Product $product): bool
     {
-        //
+        return true;
     }
 }

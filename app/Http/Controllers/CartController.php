@@ -12,22 +12,22 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|integer'
+            'product_id' => 'required|integer',
         ]);
 
         Product::findOrFail($request->product_id);
 
-        if($request->user()){
+        if ($request->user()) {
             $cart = CartItem::where([
                 'product_id' => $request->product_id,
-                'user_id' => $request->user()->id
+                'user_id' => $request->user()->id,
             ])->first();
 
             $cart ? $cart->increment('quantity')
                 : CartItem::create([
                     'quantity' => 1,
                     'product_id' => $request->product_id,
-                    'user_id' => $request->user()->id
+                    'user_id' => $request->user()->id,
                 ]);
         }
 
@@ -39,16 +39,19 @@ class CartController extends Controller
         return Inertia::render('Site/Cart', [
             'carts' => CartItem::with('product')
                 ->where('user_id', auth()->user()->id)
-                ->get()
+                ->get(),
         ]);
     }
 
     public function increase(Request $request)
     {
-        $cart = CartItem::with('product')->where('user_id', auth()->user()->id)->findOrFail($request->cartId);
+        $cart = CartItem::with('product')
+            ->where('user_id', auth()->user()->id)
+            ->findOrFail($request->cartId);
 
-        if($cart->product->quantity == $cart->quantity)
+        if ($cart->product->quantity == $cart->quantity) {
             return redirect()->back()->with('message', 'Количество продукта не хватает!');
+        }
 
         $cart->increment('quantity');
 

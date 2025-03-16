@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ProductFactory extends Factory
 {
     use Price;
+
     /**
      * Define the model's default state.
      *
@@ -41,7 +42,7 @@ class ProductFactory extends Factory
             'updated_by' => null,
             'deleted_by' => null,
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ];
     }
 }

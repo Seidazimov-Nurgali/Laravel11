@@ -19,7 +19,7 @@ class OrderCreatedMail extends Mailable implements ShouldQueue
      */
     public function __construct(
         public Order $order,
-    ){}
+    ) {}
 
     /**
      * Get the message envelope.
@@ -38,6 +38,10 @@ class OrderCreatedMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'emails.order_created',
+            with: [
+                'total_price' => $this->order->total_price,
+                'status' => $this->order->status,
+            ],
         );
     }
 

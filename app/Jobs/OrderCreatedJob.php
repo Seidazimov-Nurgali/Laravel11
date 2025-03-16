@@ -21,7 +21,7 @@ class OrderCreatedJob implements ShouldQueue
      */
     public function __construct(
         public Order $order,
-    ){}
+    ) {}
 
     /**
      * Execute the job.

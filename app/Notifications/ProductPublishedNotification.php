@@ -8,18 +8,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProductCreatedNotification extends Notification
+class ProductPublishedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $product;
     /**
      * Create a new notification instance.
      */
-    public function __construct(Product $product)
-    {
-        $this->product = $product;
-    }
+    public function __construct(
+        public Product $product
+    ) {}
 
     /**
      * Get the notification's delivery channels.
@@ -37,11 +35,11 @@ class ProductCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Product created')
-                    ->line('The introduction to the notification.')
-                    ->line('Product title: '. $this->product->title)
-                    ->action('Go to Product', route('products.show', $this->product))
-                    ->line('Thank you for using our application!');
+            ->subject('Product created')
+            ->line('The introduction to the notification.')
+            ->line('Product title: '.$this->product->title)
+            ->action('Go to Product', route('admin.products.show', $this->product))
+            ->line('Thank you for using our application!');
     }
 
     /**

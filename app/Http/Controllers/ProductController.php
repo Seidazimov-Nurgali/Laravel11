@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ProductCreated;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\User;
+use App\Notifications\ProductPublishedNotification;
 use App\Traits\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,7 @@ use Inertia\Inertia;
 class ProductController extends Controller
 {
     use Price;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,18 +27,7 @@ class ProductController extends Controller
     {
         $products = Product::query()
             ->with('category', 'brand', 'product_images')
-//            ->when($request->get('ids'), function ($query) use ($request){
-//                $query->whereIn('id', json_decode($request->get('ids')));
-//            })
-            ->when($request->get('search'), function ($query) use ($request){
-                $query->where('title', 'LIKE', '%'.$request->get('search').'%');
-            })
-            ->when($request->get('sortBy') && $request->get('sortOrder'), function ($query) use ($request){
-                $query->orderBy($request->get('sortBy'), $request->get('sortOrder'));
-            })
-            ->when($request->get('brand_id'), function ($query) use ($request){
-                $query->where('brand_id', $request->get('brand_id'));
-            })
+            ->filter([], [], [])
             ->latest()
             ->paginate(2)
             ->withQueryString();
@@ -45,7 +36,7 @@ class ProductController extends Controller
             'products' => ProductResource::collection($products),
             'filters' => $request->only(['search', 'sortBy', 'sortOrder']),
             'brands' => Brand::all(),
-            'categories' => Category::all()
+            'categories' => Category::all(),
         ]);
     }
 
@@ -58,7 +49,7 @@ class ProductController extends Controller
             abort(403);
         }
 
-        if ($request->has('price')){
+        if ($request->has('price')) {
             $case = $this->getCase($request->get('price'));
         }
 
@@ -74,12 +65,12 @@ class ProductController extends Controller
             'is_sale' => $request->isSale,
             'is_new' => $request->isNew,
             'created_by' => $request->user()->id,
-            'price_id' => $case ?? 1
+            'price_id' => $case ?? 1,
         ]);
 
         if ($request->has('images')) {
             foreach ($request->images as $image) {
-                $uniqueName = time() . '-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $uniqueName = time().'-'.Str::random(10).'.'.$image->getClientOriginalExtension();
                 $imagePath = Storage::disk('public')->putFileAs('/product_images', $image, $uniqueName);
                 //$image->move('product_images', $uniqueName);
                 ProductImage::create([
@@ -91,7 +82,6 @@ class ProductController extends Controller
         }
 
         //event(new ProductCreated($product));
-        ProductCreated::dispatch($product);
 
         return redirect()->route('admin.products.index')->with('message', 'Product successfully created');
     }
@@ -102,7 +92,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Site/ProductShow', [
-            'product' => new ProductResource($product)
+            'product' => new ProductResource($product),
         ]);
     }
 
@@ -113,11 +103,11 @@ class ProductController extends Controller
     {
         //$this->authorize('update', $product);
         //Gate::authorize('update', $product);
-//        if ($request->user()->cannot('update', $product)) {
-//            abort(403);
-//        }
+        //        if ($request->user()->cannot('update', $product)) {
+        //            abort(403);
+        //        }
 
-        if ($request->has('price')){
+        if ($request->has('price')) {
             $case = $this->getCase($request->get('price'));
             $product->price_id = $case;
         }
@@ -135,7 +125,7 @@ class ProductController extends Controller
         $product->updated_by = $request->user()->id;
         $product->save();
 
-        foreach ($request->removedImageIds ?? [] as $id){
+        foreach ($request->removedImageIds ?? [] as $id) {
             $image = ProductImage::find($id);
             if ($image) {
                 Storage::disk('public')->delete($image->image_path);
@@ -144,12 +134,12 @@ class ProductController extends Controller
         }
 
         foreach ($request->images ?? [] as $image) {
-            $uniqueName = time() . '-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $uniqueName = time().'-'.Str::random(10).'.'.$image->getClientOriginalExtension();
             $imagePath = Storage::disk('public')->putFileAs('/product_images', $image, $uniqueName);
             //$image->move('product_images', $uniqueName);
             ProductImage::create([
                 'product_id' => $product->id,
-                'image_path' => $imagePath
+                'image_path' => $imagePath,
             ]);
         }
 
@@ -170,12 +160,16 @@ class ProductController extends Controller
     {
         $request->validate([
             'id' => 'required',
-            'status' => 'required|bool'
+            'status' => 'required|bool',
         ]);
 
         $product = Product::findOrFail($request->get('id'));
         $product->is_public = $request->get('status');
+        $product->updated_by = $request->user()->id;
         $product->save();
+
+        $admin = User::find(1);
+        $admin->notify(new ProductPublishedNotification($product));
 
         return redirect()->route('admin.products.index')->with('message', 'Product successfully updated');
     }

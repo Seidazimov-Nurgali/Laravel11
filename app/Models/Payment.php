@@ -12,7 +12,7 @@ class Payment extends Model
         'status',
         'type',
         'created_by',
-        'updated_by'
+        'updated_by',
     ];
 
     public function order(): \Illuminate\Database\Eloquent\Relations\HasOne

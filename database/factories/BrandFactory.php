@@ -19,11 +19,11 @@ class BrandFactory extends Factory
         $title = fake()->unique()->randomElement([
             'Dell',
             'Samsung',
-            'Apple'
+            'Apple',
         ]);
 
         return [
-            'title' => $title
+            'title' => $title,
         ];
     }
 }

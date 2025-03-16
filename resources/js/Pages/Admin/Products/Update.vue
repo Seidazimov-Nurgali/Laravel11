@@ -1,7 +1,7 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
-import {nextTick, onMounted, ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 import {Dropzone} from "dropzone";
 import Modal from "@/Components/Modal.vue";
 import TextInput from "@/Components/TextInput.vue";
