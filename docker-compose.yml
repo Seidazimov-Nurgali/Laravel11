@@ -20,7 +20,7 @@ services:
             - ./:/var/www
         working_dir: /var/www
         ports:
-            - ":5173"
+            - "5173:5173"
         networks:
             - Laravel11
 
@@ -64,7 +64,6 @@ services:
             - ./_docker/supervisor:/etc/supervisor/conf.d/
         ports:
             - "9000:9000"
-            #- "5173:5173"
             - "8080:8080"
         networks:
             - Laravel11

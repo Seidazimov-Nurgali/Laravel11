@@ -78,19 +78,19 @@ jobs:
 #        run: |
 #          docker-compose down
 
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DO_HOST }}
-          username: root
-          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
-          passphrase: test
-          script: |
-            cd /var/www
-            git pull
-            docker exec Laravel11-php-fpm composer install --optimize-autoloader
-            docker exec Laravel11-php-fpm php artisan migrate --force
-            docker exec Laravel11-php-fpm php artisan optimize:clear
-            docker exec Laravel11-php-fpm php artisan optimize
-            docker exec Laravel11-php-fpm /etc/init.d/supervisor start
-            docker exec Laravel11-node npm run build
+#      - name: Deploy
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.DO_HOST }}
+#          username: root
+#          key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
+#          passphrase: test
+#          script: |
+#            cd /var/www
+#            git pull
+#            docker exec Laravel11-php-fpm composer install --optimize-autoloader
+#            docker exec Laravel11-php-fpm php artisan migrate --force
+#            docker exec Laravel11-php-fpm php artisan optimize:clear
+#            docker exec Laravel11-php-fpm php artisan optimize
+#            docker exec Laravel11-php-fpm /etc/init.d/supervisor start
+#            docker exec Laravel11-node npm run build

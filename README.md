@@ -14,5 +14,7 @@ In this monolith project will be used (SPA):
 - Laravel Pulse
 - Laravel Sail
 - Postgres
+- Laravel Pint
+- GitHub CI/CD
 
 
