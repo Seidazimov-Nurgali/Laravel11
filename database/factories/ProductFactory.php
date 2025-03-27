@@ -38,7 +38,7 @@ class ProductFactory extends Factory
             'is_sale' => fake()->boolean(),
             'is_new' => fake()->boolean(),
             'in_stock' => fake()->boolean(),
-            'created_by' => User::get()->random()->id,
+            'created_by' => 1,//User::get()->random()->id,
             'updated_by' => null,
             'deleted_by' => null,
             'created_at' => now(),

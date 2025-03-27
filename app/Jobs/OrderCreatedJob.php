@@ -28,7 +28,7 @@ class OrderCreatedJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $users = User::whereIn('id', [3, 4])->get();
+        $users = User::whereIn('id', [1])->get();
 
         Mail::to($users)->send(new OrderCreatedMail($this->order));
     }

@@ -16,5 +16,6 @@ In this monolith project will be used (SPA):
 - Postgres
 - Laravel Pint
 - GitHub CI/CD
+- Spatie Laravel Permissions
 
 

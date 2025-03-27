@@ -25,6 +25,10 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->cannot('read product')) {
+            abort(403);
+        }
+
         $products = Product::query()
             ->with('category', 'brand', 'product_images')
             ->filter([], [], [])
@@ -45,7 +49,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        if ($request->user()->cannot('create', Product::class)) {
+        if ($request->user()->cannot('create product')) {
             abort(403);
         }
 
@@ -91,6 +95,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        if (auth()->user()->cannot('read product')) {
+            abort(403);
+        }
+
         return Inertia::render('Site/ProductShow', [
             'product' => new ProductResource($product),
         ]);
@@ -101,11 +109,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // $this->authorize('update', $product);
-        // Gate::authorize('update', $product);
-        //        if ($request->user()->cannot('update', $product)) {
-        //            abort(403);
-        //        }
+        if (auth()->user()->cannot('update product') && auth()->user()->id === $product->user_id) {
+            abort(403);
+        }
 
         if ($request->has('price')) {
             $case = $this->getCase($request->get('price'));
@@ -151,6 +157,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (auth()->user()->cannot('delete product') && auth()->user()->id === $product->user_id) {
+            abort(403);
+        }
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('message', 'Product successfully deleted');

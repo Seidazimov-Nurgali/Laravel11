@@ -18,24 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('admin!23'),
-
-        ]);
-        User::factory(10)->create();
-        Brand::factory(3)->create();
-        Category::factory(3)->create();
-        Price::create(['title' => 'min-100']);
-        Price::create(['title' => '100-500']);
-        Price::create(['title' => '500-1000']);
-        Price::create(['title' => '1000-max']);
-        Product::factory(5)->create();
-
         $this->call([
             RoleSeeder::class,
-            RoleUserSeeder::class,
+            PermissionSeeder::class,
+            UserSeeder::class,
+            PriceSeeder::class
         ]);
+
+        //User::factory(10)->create();
+        Brand::factory(3)->create();
+        Category::factory(3)->create();
+        //Product::factory(5)->create();
     }
 }
